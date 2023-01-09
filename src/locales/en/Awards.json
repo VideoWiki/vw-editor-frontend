@@ -1,0 +1,60 @@
+{
+    "EUV":{
+        "euv":"#EUvsVirus Hackathon Challenge Winner",
+        "project":"Project conceptualization",
+        "time" : "June, 2020",
+        "info":"The European Commission launched the #EUvsVirus hackathon, a non-profit online hackathon to connect civil society, innovators, partners and buyers across Europe to develop innovative solutions to overcome coronavirus-related challenges. It is also the largest hackathon in the world. VideoWiki (“Video Wikipedia for Learners and Creators”) was one of the winning projects in the hackathon, being supported by the EUA members. It is a simple tool to create teaching content without any additional skills needed from the teachers' side. VideoWiki enables you to easily create content and make it available for everyone, with censorship protection through a Public Blockchain Network.",
+        "link": "https://www.euvsvirus.org/"
+    },
+
+    "Hack":{
+        "hack":"#HackBack Overall Winner 2020",
+        "info1":"#HackBack, an online hackathon organised by What The Hack aims to address the needs of small to medium enterprises (SMEs) and startups during the recovery from Covid-19 crisis.",
+        "info2": "Besides securing the first prize in #HackBack 2020, it has also been awarded for the user-friendly UX. VideoWiki platform is made keeping simplicity and ease of use in mind. It ensures continuous content consumption without any form of distraction or disturbance. The UI provides every needed tool in a simple step-by-step workflow which makes content-creation and consumption easy and effective.",
+        "time" : "May, 2020",
+        "ux":"UX definitions and first prize",
+        "link": "https://what-the-hack.co/hackback/"
+    },
+    "DFINITY":{
+        "dfinity": "#DFINITY Foundation Finalist",
+        "time" : "December, 2020",
+        "info": "The DFINITY Foundation is a not-for-profit organization based in Zurich, Switzerland, which believes smart contracts that run on a public blockchain are a vastly superior new form of software. Thus, their mission is to develop technology that supports the next generation Internet Computer blockchain network and ecosystem. The Internet Computer is supported by a growing community of crypto enthusiasts, investors, and independent node providers, who operate the node machines that power the Internet Computer. And VideoWiki was one of the 8 finalists who saw their project being selected in a program that allows developers to build dapps that are scaleable, run smart contracts at web speed, and serve user experiences directly on chain.",
+        "link": "https://dfinity.org/"
+    },
+    "SWARM":{
+        "swarm": "#Partnership with SWARM",
+        "time" : "January, 2022",
+        "info": "After applying for SWARM grant program, VideoWiki had the opportunity of showcasing the product to SWARM team, which led to conversations for a partnership. SWARM is a decentralised storage and communication system for a sovereign digital society. It works as a system of peer-to-peer networked nodes, that create a decentralised storage and communication service. The system is economically self-sustaining due to a built-in incentive system enforced through smart contracts on the Ethereum blockchain.",
+        "link": "https://www.ethswarm.org/ecosystem.html#:~:text=Apply%20for%20a%20grant,mentors%20the%20developers%20and%20founders."
+    },
+
+    "News":{
+        "news":"News & Media Coverage",
+        "read":"Read More",
+        "euv":{
+            "title":"#EUvsVIRUS Hackathon results: bringing solutions to Covid-19 challenges to the next level",
+            "info":"VideoWiki: defined as a \"Video Wikipedia for Learners and Creators\", this simple tool helps teachers create teaching content without any advanced knowledge of a tool or code."
+        },
+        "videowiki":{
+            "title":"VideoWiki “Video Wikipedia for Learners and Creators",
+            "info":"We offer a tool for teachers. They copy-paste the content they want to convert to a video. A collaborative platform for learners and educators to secure learning continuity in times of restrictions and beyond."
+        },
+        "remote":{
+            "title":"Remote Working & Education - E-Learning methods & tools",
+            "info":"A collaborative platform for learners and educators to secure learning continuity in times of restrictions and beyond. A simple tool for teachers to create teaching content without any advanced knowledge of a tool or code."
+        },
+        "ua":{
+            "title":"UA Incubator Startup creates an award-winning automatic content scanning project",
+            "info":"The VideoWiki - Video Wikipedia for Learners and Creators project consists of a platform that allows the automatic conversion of teaching content into appealing digital media."
+        },
+        "sustainable":{
+            "title":"Sustainable education through digital learning spaces",
+            "info":"VideoWiki is an AI teaching assistant tool that quickly creates teaching courses in video format that can be shared online while streaming or sharing. The solution is to tackle the situation by providing the teachers with an assisted course creation tool to develop interactive media lessons."
+        },
+        "tch":{
+            "title":"VideoWiki (TCH Protocol)",
+            "info":"An open content editing platform that powers the creation and monetization of content while prioritizing IP protection. The Team recognized the need for simple text-to-video content creation to benefit the rise of online learning and enable a more immersive learning experience."
+        }
+
+    }
+}
