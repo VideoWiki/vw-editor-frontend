@@ -114,7 +114,7 @@ export default {
         headers: {
           'Content-Type': 'application/json',
           Authorization:
-            'Bearer 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',
+            'Bearer '+constants.apiKey,
         },
         data: data,
       };
