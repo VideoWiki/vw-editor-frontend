@@ -17,8 +17,8 @@ module.exports = {
     plugins: [new CompressionPlugin()],
     optimization: {
       splitChunks: {
-        chunks: 'all'
-      }
-    }
-  }
+        chunks: 'all',
+      },
+    },
+  },
 };

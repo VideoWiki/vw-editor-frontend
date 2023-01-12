@@ -168,6 +168,11 @@ export default {
       this.$store.commit('SET_CURRENT_TRANSACTION_STEP', 1);
       this.showTransactionModal = true;
       this.currentTxPhase = 'Processing';
+      if (this.videoTxData.dataToken === 'none') {
+        await this.$store.dispatch('purchase', this.videoTxData.dod);
+        this.showTransactionModal = false;
+        return;
+      }
       try {
         await this.$store.dispatch(
           'initiateBuy',
@@ -188,13 +193,22 @@ export default {
       this.showAssetModal = false;
       this.txType = 'Download';
       this.$store.commit('SET_CURRENT_TRANSACTION_STEP', 1);
-      this.showTransactionModal = true;
-      this.currentTxPhase = 'Processing';
       try {
-        await this.$store.dispatch('startDownload', {
-          did: this.videoTxData.dod,
-          dta: this.videoTxData.dataToken,
-        });
+        if (this.videoTxData.dataToken === 'none') {
+          const uri = await this.$store.dispatch(
+            'tokenuri',
+            this.videoTxData.dod
+          );
+          window.open(uri, '_blank');
+          return;
+        } else {
+          this.showTransactionModal = true;
+          this.currentTxPhase = 'Processing';
+          await this.$store.dispatch('startDownload', {
+            did: this.videoTxData.dod,
+            dta: this.videoTxData.dataToken,
+          });
+        }
         setTimeout(() => (this.showTransactionModal = false), 2000);
       } catch (error) {
         if (error.code === 4001) this.currentTxPhase = 'Rejected';
@@ -221,10 +235,17 @@ export default {
         'getAssetPrice',
         this.videoTxData.exchange_key
       );
-      this.isDownloadable = await this.$store.dispatch('getDownloadStatus', {
-        did: this.videoTxData.dod,
-        accountAddress: this.accountAddress,
-      });
+      if (this.videoTxData.dataToken === 'none') {
+        this.isDownloadable = await this.$store.dispatch('ownerOf', {
+          tokenId: this.videoTxData.dod,
+          walletAddress: this.accountAddress,
+        });
+      } else {
+        this.isDownloadable = await this.$store.dispatch('getDownloadStatus', {
+          did: this.videoTxData.dod,
+          accountAddress: this.accountAddress,
+        });
+      }
       if (this.isDownloadable) {
         console.log(this.selectedVideo.published_id);
         var URL = `/api/video_details?published_id=${this.selectedVideo.published_id}`;

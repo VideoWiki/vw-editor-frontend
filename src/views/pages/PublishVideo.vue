@@ -130,6 +130,26 @@
       @close="showTransactionModal = false"
       @retry="publishVideo"
     />
+    <!-- PublishMode -->
+    <vs-popup ref="custom_modal" :active.sync="publishMode">
+      <h3 class="text-center">Choose Publish Mode</h3>
+      <div class="flex flex-col items-start -m-5">
+        <button class="btn" @click="handlePaidVideo">
+          <img
+            class="img"
+            src="https://oceanprotocol.com/static/share-5558ae2d9f99864a95f6f99172be9768.png"
+          />
+        </button>
+        <br />
+        <button class="btn" @click="polyScan">
+          <img
+            class="img"
+            src="https://forkast.news/wp-content/uploads/2021/12/polygon-768x432.jpg"
+          />
+        </button>
+      </div>
+      <!--vs-divider /-->
+    </vs-popup>
   </div>
 </template>
 
@@ -141,6 +161,7 @@ import Transaction from '@/views/components/Transaction/Transaction.vue';
 import { mapState } from 'vuex';
 import { utils } from '@/mixins/index.js';
 import { ethers } from 'ethers';
+import networks from './networks';
 export default {
   name: 'PublishVideo',
   mixins: [utils],
@@ -176,6 +197,7 @@ export default {
       currentTxPhase: 'Processing',
       previewReq: Function,
       video_url: '',
+      publishMode: false,
     };
   },
 
@@ -220,6 +242,9 @@ export default {
     },
   },
   mounted() {
+    this.$refs.custom_modal.$el.childNodes[1].childNodes[0].style.display =
+      'none';
+    this.$refs.custom_modal.$el.childNodes[1].style.width = '400px';
     if (this.$route.params.videoId) {
       this.videoId = this.$route.params.videoId;
     }
@@ -409,18 +434,23 @@ export default {
       );
     },
     async handlePaidVideo() {
+      if (window.ethereum.networkVersion !== '5') {
+        await this.switchNetwork(5);
+      }
+      this.publishMode = false;
       const walletAddress = this.$store.state.accountAddress;
       if (walletAddress) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         var name = await provider.lookupAddress(walletAddress);
-        var avatar;
-        if (!name) {
-          name = this.$store.state.AppActiveUser.first_name;
-        }
+        var avatar = {};
         if (name) {
           const resolver = await provider.getResolver(name);
           avatar = await resolver.getAvatar();
         }
+        if (!name) {
+          name = this.$store.state.AppActiveUser.first_name;
+        }
+
         var payload = {
           user: {
             stepCurrent: 5,
@@ -586,7 +616,7 @@ export default {
         if (title !== '' && desc !== '') {
           actionType === 'publish'
             ? this.videoData.is_paid
-              ? this.handlePaidVideo()
+              ? this.selecetPublish()
               : this.publishVideo('')
             : this.saveVideo();
         } else {
@@ -777,6 +807,111 @@ export default {
         });
       }
     },
+    selecetPublish() {
+      this.publishMode = true;
+    },
+    async switchNetwork(id) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: networks[id].chainId }],
+        });
+      } catch (error) {
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: networks[id].chainId,
+                  chainName: networks[id].chainName,
+                  rpcUrls: [networks[id].rpcUrl],
+                  nativeCurrency: {
+                    name: networks[id].currencyName,
+                    symbol: networks[id].symbol,
+                    decimals: 18,
+                  },
+                  blockExplorerUrls: [networks[id].blockExplorerUrl],
+                },
+              ],
+            });
+          } catch (error) {
+            alert(error.message);
+          }
+        }
+      }
+    },
+    async polyScan() {
+      if (window.ethereum.networkVersion !== '80001') {
+        await this.switchNetwork(80001);
+      }
+      this.publishMode = false;
+      const walletAddress = this.$store.state.accountAddress;
+      this.$vs.loading();
+      if (walletAddress) {
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // var name = await provider.lookupAddress(walletAddress);
+        // var avatar = {};
+        // if (name) {
+        //   const resolver = await provider.getResolver(name);
+        //   avatar = await resolver.getAvatar();
+        // }
+        // if (!name) {
+        //   name = this.$store.state.AppActiveUser.first_name;
+        // }
+        var name = this.$store.state.AppActiveUser.first_name;
+        var avatar = {};
+        try {
+          const videoPayload = {
+            video_url: this.$store.state.studio.video.url,
+            speed_factor: this.duration > 299 ? 10 : 5,
+            start: `00:${this.prettyTime(0)}`,
+            end: `00:${this.prettyTime(this.duration)}`,
+          };
+          console.log(videoPayload);
+          var ipfsUrl = this.$store.dispatch('load', {
+            video: videoPayload,
+            description: this.videoData.description,
+            title: this.videoData.title,
+            speed: this.duration > 299 ? 10 : 5,
+            name: name,
+            walletAddress,
+            avatar: avatar.url,
+          });
+          var VideoPublished = await this.$store.dispatch('mint', {
+            url: this.videoData.url,
+            walletAddress: this.$store.state.accountAddress,
+          });
+          if (VideoPublished) {
+            setTimeout(async () => {
+              this.showTransactionModal = false;
+              ipfsUrl = await ipfsUrl;
+              this.$vs.loading.close();
+              this.publishVideo(ipfsUrl);
+            }, 2000);
+          } else {
+            this.$vs.loading.close();
+            this.$vs.notify({
+              title: 'Not Published',
+              text: 'The process was interrupted',
+              color: 'danger',
+            });
+          }
+        } catch (error) {
+          this.$vs.loading.close();
+          this.$vs.notify({
+            title: 'Not Published',
+            text: 'The process was interrupted',
+            color: 'danger',
+          });
+        }
+      } else {
+        this.$vs.notify({
+          text: 'Connect your Wallet First',
+          color: 'primary',
+        });
+      }
+    },
   },
 };
 </script>
@@ -824,5 +959,17 @@ export default {
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   hyphens: auto;
+}
+
+.btn {
+  width: 100%;
+  background: none;
+  padding: 10px 40px 0 40px;
+  border: none;
+}
+
+.img {
+  width: 100%;
+  border: 1px solid;
 }
 </style>
